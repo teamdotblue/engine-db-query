@@ -22,7 +22,6 @@ import hashlib
 
 
 from datetime import datetime
-from distutils.util import strtobool
 from .config import ENGINE_DB_CONF_FILE
 
 
@@ -450,12 +449,12 @@ def load_engine_credentials():
 
             elif 'ENGINE_DB_SECURED' == conf_key:
                 engine_conf['secured'] = bool(
-                    strtobool(conf_value)
+                    str_to_bool(conf_value)
                 )
 
             elif 'ENGINE_DB_SECURED_VALIDATION' == conf_key:
                 engine_conf['secured_validation'] = bool(
-                    strtobool(conf_value)
+                    str_to_bool(conf_value)
                 )
 
             elif 'ENGINE_DB_DRIVER' == conf_key:
@@ -465,6 +464,16 @@ def load_engine_credentials():
                 engine_conf['url'] = conf_value
 
     return engine_conf
+
+def str_to_bool(val):
+    """
+    Convert string to boolean, replacement for deprecated distutils.util.strtobool
+    """
+    if val in ('y','yes','t','true','on','1'):
+        return 1
+    if val in ('n','no','f','false','off','0'):
+        return 0
+    raise ValueError("Invalid value")
 
 
 # vim: expandtab tabstop=4 shiftwidth=4
